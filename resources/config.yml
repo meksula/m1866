@@ -1,0 +1,15 @@
+# In global section you can modify main setting
+# settings.global.workspace - if name is set as `None`,
+#
+# Linux based system
+# M1866 library will create workspace in default path: /home/{username}/.m1688/
+# This config.yml of your local installation you'll could find in /home/{username}/.m1688/config.yml
+#
+# Darwin (OS X)
+# TODO
+#
+#
+
+settings:
+  global:
+    workspace: None
