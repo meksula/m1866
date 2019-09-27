@@ -4,16 +4,16 @@ import sys
 from colorama import init, Fore, Style
 from yaml import safe_load, YAMLError
 
-
-config_file = None
-running_os = None
+from m1866_lib.cli.main_controller import MainFlowController
 
 
 def run():
     init()
     config_file = load_config_yml()
     running_os = os_detect_and_create_workspace()
-    print('M1866 v' + str(config_file['settings']['global']['version']) + ' initialized with success.')
+    print('M1866 v' + str(config_file['settings']['global']['version']) + ' initialized with success and ready to work'
+                                                                          '\nType `help` if you want to learn more\n')
+    MainFlowController(config_file, running_os).flow_init()
 
 
 def define_workspace_path_unix():
@@ -105,6 +105,11 @@ def default_yml_path():
 
 
 def version_extract():
+    config_file = load_config_yml()
     if config_file is None:
         return 'Undefined'
     return str(config_file['settings']['global']['version'])
+
+
+def refresh_context():
+    _ = subprocess.call("clear", shell=True)
