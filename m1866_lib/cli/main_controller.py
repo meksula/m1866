@@ -1,6 +1,6 @@
-from m1866_lib.cli.commands import commands
+from m1866_lib.cli.commands import commands, exit_command
 from colorama import Fore, Style
-from m1866_lib.cli.commands import exit
+from m1866_lib.lib.lib_facade import LibFacade
 
 
 def prompt():
@@ -14,6 +14,7 @@ class MainFlowController:
         self.config_yml = config_yml
         self.running_os = running_os
         self.load_alises(config_yml)
+        self.lib_facade = LibFacade()
 
     def flow_init(self):
         if (self.config_yml is not None) and (self.running_os is not None):
@@ -34,14 +35,14 @@ class MainFlowController:
 
     def main_event_loop(self):
         last_command = ''
-        while last_command.lower() != exit:
+        while last_command.lower() != exit_command:
             last_command = prompt()
             self.execute(last_command)
         return
 
     def execute(self, last_command):
         try:
-            commands[last_command]().execute()
+            commands[last_command](self.lib_facade)
         except KeyError:
             print(Fore.RED, f'Command `{last_command}` is not recognized', end=Style.RESET_ALL + '\n')
 
