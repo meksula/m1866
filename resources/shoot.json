@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "workspace": "",
+    "author": "",
+    "creation_date": "",
+    "last_usage": "",
+    "history_ref": [],
+    "name": "",
+    "id": 0
+  },
+  "store_history": true,
+  "http_method": "",
+  "max_timeout_milisec": 10000,
+  "url": {
+    "protocol": "",
+    "domain": "",
+    "ip": "",
+    "port": "",
+    "uri": "",
+    "truncate_url": true,
+    "params": [
+      { "key": "", "value": "" }
+    ]
+  },
+  "request": {
+    "requires_body": "false",
+    "default_gunpowder_id": 0,
+    "associated_gunpowder_ids": [0]
+  }
+}

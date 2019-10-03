@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "workspace": "",
+    "author": "",
+    "creation_date": "",
+    "last_usage": "",
+    "history_ref": [],
+    "name": "",
+    "id": 0
+  },
+  "core": {
+    "auth_type": "",
+    "headers": [
+      { "key": "", "value": "" }
+    ],
+    "body_plain": ""
+  }
+}
