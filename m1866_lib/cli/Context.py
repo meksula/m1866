@@ -5,6 +5,7 @@ from colorama import init, Fore, Style
 from yaml import safe_load, YAMLError
 
 from m1866_lib.cli.main_controller import MainFlowController
+from m1866_lib.cli.unix_utils import define_workspace_path_unix
 
 
 def run():
@@ -14,13 +15,6 @@ def run():
     print('M1866 v' + str(config_file['settings']['global']['version']) + ' initialized with success and ready to work'
                                                                           '\nType `help` if you want to learn more\n')
     MainFlowController(config_file, running_os).flow_init()
-
-
-def define_workspace_path_unix():
-    delimiter = '/'
-    current_dir = subprocess.check_output('pwd')
-    path_parts = str(current_dir).split('/')
-    return delimiter + path_parts[1] + delimiter + path_parts[2] + delimiter + '.m1866'
 
 
 def workspace_dir_create(workspace_path):
@@ -65,6 +59,7 @@ def create_config(workspace_path):
         else:
             print(f'{file_name} creation')
             mv_config_yml(workspace_path + '/')
+        create_utils_dirs(workspace_path)
     except FileNotFoundError:
         print(Fore.RED + f'm1866 meets problem with creation config.yml file.'
               f'\nPlease fix problem or execute this command by yourself:'
@@ -113,3 +108,11 @@ def version_extract():
 
 def refresh_context():
     _ = subprocess.call("clear", shell=True)
+
+
+def create_utils_dirs(workspace_path):
+    ls_output = str(subprocess.check_output('ls ' + workspace_path, shell=True))
+    dirs = ['workspaces', 'global', 'scripts']
+    for dir_name in dirs:
+        if not ls_output.__contains__(dir_name):
+            os.system('mkdir ' + workspace_path + '/' + dir_name)

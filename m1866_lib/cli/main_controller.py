@@ -42,9 +42,12 @@ class MainFlowController:
 
     def execute(self, last_command):
         try:
-            commands[last_command](self.lib_facade)
+            commands[last_command.strip()]((self.lib_facade, last_command))
         except KeyError:
-            print(Fore.RED, f'Command `{last_command}` is not recognized', end=Style.RESET_ALL + '\n')
+            if len(last_command.strip()) > 0:
+                print(Fore.RED, f'Command `{last_command}` is not recognized', end=Style.RESET_ALL + '\n')
+            else:
+                return
 
     def print_info(self):
         print("yml object: " + str(self.config_yml) + "\nOS: " + self.running_os)
