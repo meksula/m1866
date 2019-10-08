@@ -12,3 +12,5 @@ settings:
   global:
     version: 1.0
     workspace: None
+  templates:
+    path:

@@ -58,18 +58,13 @@ def create_config(workspace_path):
             print(Style.RESET_ALL)
         else:
             print(f'{file_name} creation')
-            mv_config_yml(workspace_path + '/')
+            mv_resource('config.yml', '')
         create_utils_dirs(workspace_path)
     except FileNotFoundError:
         print(Fore.RED + f'm1866 meets problem with creation config.yml file.'
               f'\nPlease fix problem or execute this command by yourself:'
               f'\n${complete}')
         print(Style.RESET_ALL)
-
-
-def mv_config_yml(workspace_path):
-    os.system('cp ' + default_yml_path() + ' ' + workspace_path)
-    print('cp ' + default_yml_path() + ' ' + workspace_path)
 
 
 def load_config_yml():
@@ -110,9 +105,37 @@ def refresh_context():
     _ = subprocess.call("clear", shell=True)
 
 
+# Add here to `dirs` list all directories you want to create
 def create_utils_dirs(workspace_path):
+    dirs = ['workspaces', 'global', 'global/templates', 'scripts']
+
     ls_output = str(subprocess.check_output('ls ' + workspace_path, shell=True))
-    dirs = ['workspaces', 'global', 'scripts']
     for dir_name in dirs:
         if not ls_output.__contains__(dir_name):
             os.system('mkdir ' + workspace_path + '/' + dir_name)
+    create_utils_files(workspace_path)
+
+
+# Add here tuple to `files` list all files to move to current user's workspace
+# First variable in tuple act as file name (if file is placed in resource directory, you can type only filename)
+# Second variable in tuple act as target directory in your workspace
+def create_utils_files(workspace_path):
+    files = [
+        ('gunpowder.json', 'global/templates'),
+        ('shoot.json', 'global/templates')
+    ]
+    for file_path, target_path in files:
+        mv_resource(file_path, target_path, workspace_path)
+
+
+def mv_resource(file_path, target_path, workspace_path=define_workspace_path_unix()):
+    if workspace_path[-1] != '/':
+        workspace_path = workspace_path + '/'
+    if file_path[0] != '/':
+        file_path = '/' + file_path
+
+    cp_source = lib_path() + 'resources' + file_path
+    cp_target = workspace_path + target_path
+    command = 'cp ' + cp_source + " " + cp_target
+    os.system(command)
+    return command
