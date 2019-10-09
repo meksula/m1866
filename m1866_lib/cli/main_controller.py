@@ -41,13 +41,22 @@ class MainFlowController:
         return
 
     def execute(self, last_command):
+        cmd_tpl = self.args_extract(last_command)
         try:
-            commands[last_command.strip()]((self.lib_facade, last_command))
+            commands[cmd_tpl[0].strip()]((self.lib_facade, cmd_tpl[1]))
         except KeyError:
             if len(last_command.strip()) > 0:
                 print(Fore.RED, f'Command `{last_command}` is not recognized', end=Style.RESET_ALL + '\n')
             else:
                 return
+
+    # This function returns entered command as command and arguments
+    def args_extract(self, last_command):
+        parts = last_command.split('->')
+        if len(parts) > 1:
+            return parts[0].strip(), parts[1].strip()
+        else:
+            return last_command.strip(), ''
 
     def print_info(self):
         print("yml object: " + str(self.config_yml) + "\nOS: " + self.running_os)
