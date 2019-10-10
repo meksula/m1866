@@ -4,6 +4,8 @@
 # - id - is zero as default. If you want to load request from resources you have to choose correct id
 # - gunpowder - by this parameter you can pass request directly
 
+from datetime import datetime
+
 
 def factorize(from_rsrcs=False, id=0, gunpowder=None):
     if from_rsrcs is True:
@@ -33,3 +35,21 @@ class Gunpowder:
 
     def info(self):
         pass
+
+
+class Shoot:
+
+    def __init__(self, gunpowder):
+        self.gunpowder = gunpowder
+
+
+class Smoke:
+
+    def __init__(self, shoot, response_body, cookies, headers, response_status, url):
+        self.shoot = shoot
+        self.timestamp = datetime.now()
+        self.response_body = response_body
+        self.cookies = cookies
+        self.headers = headers
+        self.response_status = response_status
+        self.url = url
