@@ -7,6 +7,9 @@ file:
 # M1866 library will create workspace in default path: /home/{username}/.m1688/
 # This config.yml of your local installation you'll could find in /home/{username}/.m1688/config.yml
 #
+# cloud parameters describe way of communication between desktop client and resources in cloud
+# You need to specify url of your remote hub, username and auth_token that you can retrieve in
+# web user interface of m1866-cloud
 
 settings:
   global:
@@ -14,3 +17,8 @@ settings:
     workspace: None
   templates:
     path:
+  cloud:
+    remote:
+      url:
+      username:
+      auth_token:

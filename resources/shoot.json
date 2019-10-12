@@ -9,6 +9,7 @@
     "id": 0
   },
   "store_history": true,
+  "remote": false,
   "http_method": "",
   "max_timeout_milisec": 10000,
   "url": {
