@@ -1,20 +1,11 @@
 # This facade class represents all entry points of main, core library.
-from m1866_lib.cli.workspace import create_workspace_dir
-from m1866_lib.lib.shoots_commons import MagazineFacade, ShootsFacade, GunpowderFacade, IntegrationFacade, \
-    HistoryFacade, ConfigurationFacade, PostmanFacade, CurlFacade
+from m1866_lib.cli.workspace import Workspace
 
 
 class LibFacade:
 
     def __init__(self):
-        self.magazineFacade = MagazineFacade()
-        self.shootsFacade = ShootsFacade()
-        self.gunpowderFacade = GunpowderFacade()
-        self.integrationTestFacade = IntegrationFacade()
-        self.historyFacade = HistoryFacade()
-        self.configurationFacade = ConfigurationFacade()
-        self.postmanFacade = PostmanFacade()
-        self.curlFacade = CurlFacade()
+        self.workspace = Workspace.instance
 
     # magazine API
     def reload_hub(self):
@@ -66,8 +57,7 @@ class LibFacade:
 
     # configuration API
     def create_workspace(self):
-        create_workspace_dir(input('Type workspace name: '))
-        pass
+        self.workspace.create_workspace_dir(input('Type workspace name: '))
 
     def change_workspace(self):
         pass
@@ -76,7 +66,13 @@ class LibFacade:
         pass
 
     def show_workspace(self):
-        pass
+        self.workspace.show_workspace()
+
+    def print_workspaces_list(self):
+        self.workspace.print_workspaces_list()
+
+    def use_workspace(self, workspace_name):
+        self.workspace.use_workspace(workspace_name)
 
     # postman API
     def parse_postman_coll(self):

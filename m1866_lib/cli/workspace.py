@@ -6,44 +6,95 @@ import re
 from m1866_lib.cli.unix_utils import define_workspace_path_unix
 
 
-def create_workspace_dir(workspace_name):
-    if not valid(workspace_name):
-        print(Fore.RED, 'Workspace was not created because name is not valid!', Style.RESET_ALL)
-        return
-    workspace_path = define_workspace_path_unix() + '/workspaces/' + workspace_name
+class Workspace:
+    instance = None
 
-    def inner_dirs():
-        for dir_name in ['shoots', 'gunpowder', 'history', 'integration']:
-            os.system('mkdir ' + workspace_path + '/' + dir_name)
+    def __init__(self, default_workspace):
+        if not Workspace.instance:
+            Workspace.instance = Workspace.__Workspace(default_workspace)
+        else:
+            Workspace.instance.current_workspace = default_workspace
 
-    try:
-        subprocess.check_output('ls ' + workspace_path)
-        return
-    except FileNotFoundError:
-        try:
-            subprocess.check_output('ls ' + workspace_path, shell=True)
-            print(Fore.RED, f'Workspace called `{workspace_name}` just exist!')
-        except subprocess.CalledProcessError:
-            os.system('mkdir ' + workspace_path)
-            inner_dirs()
-            print(Fore.GREEN, f'`{workspace_name}` workspace created')
-    finally:
-        print(Style.RESET_ALL)
+    def workspace_establish(self, workspace):
+        if workspace in self.instance.list_workspaces():
+            self.instance.use_workspace(workspace)
+            return
+        elif workspace is not None and workspace is not 'None' and workspace.strip() is not '':
+            self.instance.create_workspace_dir(workspace)
+            self.instance.use_workspace(workspace)
 
+    class __Workspace:
+        def __init__(self, workspace):
+            self.current_workspace = workspace
 
-def valid(workspace_name):
-    regex = re.compile(r"^[a-zA-Z0-9_]+$")
-    result = regex.match(workspace_name)
-    return result is not None
+        def create_workspace_dir(self, workspace_name):
+            if not self.valid(workspace_name):
+                print(Fore.RED, 'Workspace was not created because name is not valid!', Style.RESET_ALL)
+                return
+            workspace_path = define_workspace_path_unix() + '/workspaces/' + workspace_name
 
+            def inner_dirs():
+                for dir_name in ['shoots', 'gunpowder', 'history', 'integration']:
+                    os.system('mkdir ' + workspace_path + '/' + dir_name)
 
-def list_workspaces():
-    workspace_path = define_workspace_path_unix() + '/workspaces'
-    ls_output = str(subprocess.check_output('ls ' + workspace_path, shell=True))
-    dir_list = ls_output.strip()[2:-1].split('\\n')
-    if len(dir_list[:-1]) > 0:
-        print('\nWorkspaces:')
-        for dir_name in sorted(dir_list[:-1], key=len):
-            print('* ' + Back.CYAN, dir_name, Style.RESET_ALL)
-    else:
-        print(Fore.RED, 'There is no workspaces yet', Style.RESET_ALL)
+            try:
+                subprocess.check_output('ls ' + workspace_path)
+                return
+            except FileNotFoundError:
+                try:
+                    subprocess.check_output('ls ' + workspace_path, shell=True)
+                    print(Fore.RED, f'Workspace called `{workspace_name}` just exist!')
+                except subprocess.CalledProcessError:
+                    os.system('mkdir ' + workspace_path)
+                    inner_dirs()
+                    print(Fore.GREEN, f'`{workspace_name}` workspace created')
+            finally:
+                print(Style.RESET_ALL)
+
+        def load_workspace(self, workspace_name):
+            if workspace_name is None:
+                print(Fore.RED, 'Workspace is not defined!\nUse command `workspace use WORKSPACE_NAME`',
+                      Style.RESET_ALL)
+
+        def workspace_pointer(self):
+            return define_workspace_path_unix() + '/workspaces/' + self.current_workspace
+
+        def valid(self, workspace_name):
+            regex = re.compile(r"^[a-zA-Z0-9_]+$")
+            result = regex.match(workspace_name)
+            return result is not None
+
+        def list_workspaces(self):
+            workspace_path = define_workspace_path_unix() + '/workspaces'
+            ls_output = str(subprocess.check_output('ls ' + workspace_path, shell=True))
+            return ls_output.strip()[2:-1].split('\\n')
+
+        def print_workspaces_list(self):
+            dir_list = self.list_workspaces()
+            if len(dir_list[:-1]) > 0:
+                print('\nWorkspaces:')
+                for dir_name in sorted(dir_list[:-1], key=len):
+                    if dir_name == self.current_workspace:
+                        print('* ' + Back.CYAN, dir_name, Style.RESET_ALL, '  <- current workspace')
+                    else:
+                        print('* ' + Back.CYAN, dir_name, Style.RESET_ALL)
+            else:
+                print(Fore.RED, 'There is no workspaces yet', Style.RESET_ALL)
+
+        def use_workspace(self, workspace_name):
+            def is_workspace_exist():
+                if workspace_name in self.list_workspaces():
+                    return True
+                else:
+                    print(Fore.RED, f'Workspace `{workspace_name}` not exist!', Style.RESET_ALL)
+
+            if is_workspace_exist():
+                self.current_workspace = workspace_name
+                print('Checkout to workspace: ' + self.current_workspace)
+
+        def show_workspace(self):
+            if self.current_workspace is None or self.current_workspace == 'None':
+                print('Workspace is not set yet')
+            else:
+                print(f'Current workspace: {self.current_workspace}')
+                return self.current_workspace

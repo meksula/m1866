@@ -14,7 +14,8 @@ file:
 settings:
   global:
     version: 1.0
-    workspace: None
+    workspace:
+      default:
   templates:
     path:
   cloud:

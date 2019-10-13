@@ -1,5 +1,3 @@
-from m1866_lib.cli.workspace import list_workspaces
-
 exit_command = 'exit'
 
 # Notice that to invoke most of method in `command` dictionary
@@ -12,7 +10,7 @@ commands = {
     'help': lambda fargs: help(),
     'tutor': lambda fargs: tutor(fargs[1]),
 
-    'delete workspace': lambda fargs: delete_workspace(),
+    'delete workspace': lambda fargs: fargs[0].delete_workspace(fargs[1]),
 
     # magazine API
     'reload': lambda fargs: fargs[0].reload_hub(),
@@ -43,7 +41,9 @@ commands = {
     'workspace change': lambda fargs: fargs[0].change_workspace(),
     'workspace migrate': lambda fargs: fargs[0].migrate_workspace(),
     'workspace show': lambda fargs: fargs[0].show_workspace(),
-    'workspace list': lambda fargs: list_workspaces(),
+    'show': lambda fargs: fargs[0].show_workspace(),
+    'workspace list': lambda fargs: fargs[0].print_workspaces_list(),
+    'workspace use': lambda fargs: fargs[0].use_workspace(fargs[1]),
 
     # postman API
     'postman parse': lambda fargs: fargs[0].parse_postman_coll(),
@@ -53,10 +53,6 @@ commands = {
     'curl parse': lambda fargs: fargs[0].parse_curl_coll(),
     'curl export': lambda fargs: fargs[0].export_to_curl_scripts(),
 }
-
-
-def delete_workspace():
-    pass
 
 
 def help():

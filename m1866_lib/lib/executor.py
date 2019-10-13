@@ -71,6 +71,7 @@ def build_url(shoot):
                 param_list = shoot["url"]["params"]
                 for param in param_list:
                     old = '${' + param["key"] + '}'
+                    # TODO jeżeli value jest pusta, to trzeba pobrać ją z klawiatury!
                     new = param["value"]
                     complete_url = complete_url.replace(old, new)
                 return complete_url

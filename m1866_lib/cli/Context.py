@@ -6,6 +6,7 @@ from yaml import safe_load, YAMLError
 
 from m1866_lib.cli.main_controller import MainFlowController
 from m1866_lib.cli.unix_utils import define_workspace_path_unix
+from m1866_lib.cli.workspace import Workspace
 
 
 def run():
@@ -14,6 +15,8 @@ def run():
     running_os = os_detect_and_create_workspace()
     print('M1866 v' + str(config_file['settings']['global']['version']) + ' initialized with success and ready to work'
                                                                           '\nType `help` if you want to learn more\n')
+    # Initialize workspace from config.yml
+    Workspace(config_file['settings']['global']['workspace'])
     MainFlowController(config_file, running_os).flow_init()
 
 
