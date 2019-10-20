@@ -18,7 +18,7 @@ commands = {
 
     # shoots API
     'run vol': lambda fargs: fargs[0].execute_volatile_shoot(),
-    'add shoot': lambda fargs: fargs[0].add_shoot(),
+    'add shoot': lambda fargs: fargs[0].add_shoot(fargs[1]),
     'run': lambda fargs = 'placeholder': fargs[0].execute_shoot(fargs[1]),
     'run blind': lambda fargs: fargs[0].execute_shoot_no_hist(),
     'delete': lambda fargs: fargs[0].delete_shoot(fargs[1]),

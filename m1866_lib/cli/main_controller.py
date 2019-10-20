@@ -13,8 +13,11 @@ class MainFlowController:
     def __init__(self, config_yml, running_os):
         self.config_yml = config_yml
         self.running_os = running_os
-        self.load_alises(config_yml)
         self.lib_facade = LibFacade()
+        try:
+            self.load_alises(config_yml)
+        except TypeError:
+            pass
 
     def flow_init(self):
         if (self.config_yml is not None) and (self.running_os is not None):
@@ -52,9 +55,25 @@ class MainFlowController:
 
     # This function returns entered command as command and arguments
     def args_extract(self, last_command):
-        parts = last_command.split('->')
+        # `delim` divide input text for main command and arguments
+        delim = '->'
+
+        # This inner function get as argument option part of command
+        # delimited by `delim` fields
+        def options_extract(options_inline):
+            option_eq_sign = '='
+            options = options_inline.split()
+            tupled = []
+            for option in options:
+                option_parts = str(option).split(option_eq_sign)
+                if len(option_parts) > 1:
+                    tupled.append((option_parts[0], option_parts[1]))
+                else:
+                    tupled.append((option_parts[0], ''))
+            return tupled
+        parts = last_command.split(delim)
         if len(parts) > 1:
-            return parts[0].strip(), parts[1].strip()
+            return parts[0].strip(), options_extract(parts[1].strip())
         else:
             return last_command.strip(), ''
 

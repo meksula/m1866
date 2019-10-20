@@ -18,11 +18,12 @@ class LibFacade:
     def execute_volatile_shoot(self):
         pass
 
-    def add_shoot(self):
+    def add_shoot(self, options):
         pass
 
-    def execute_shoot(self):
-        pass
+    def execute_shoot(self, options):
+        for opt in options:
+            print(str(opt))
 
     def execute_shoot_no_hist(self):
         pass

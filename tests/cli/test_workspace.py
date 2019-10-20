@@ -18,6 +18,11 @@ class TestWorkspace(unittest.TestCase):
         self.assertEqual(wsp.instance.show_workspace(), workspace_name)
 
     def test_workspace_pointer_should_point_correct_dir(self):
-        wsp_dir = Workspace("default").instance.workspace_pointer()
-        print(wsp_dir)
-        subprocess.check_call('ls ' + wsp_dir, shell=True)
+        workspace = Workspace("default")
+        wsp_dir = workspace.instance.workspace_pointer()
+
+        whomai = str(subprocess.check_output('whoami', shell=True))
+
+        expected_dir = '/home/' + whomai[2:-3] + '/.m1866/workspaces/default'
+        self.assertEqual(expected_dir, wsp_dir)
+
