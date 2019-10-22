@@ -16,7 +16,7 @@ def run():
     print('M1866 v' + str(config_file['settings']['global']['version']) + ' initialized with success and ready to work'
                                                                           '\nType `help` if you want to learn more\n')
     # Initialize workspace from config.yml
-    Workspace(config_file['settings']['global']['workspace'])
+    Workspace(config_file['settings']['global']['workspace']['default'])
     MainFlowController(config_file, running_os).flow_init()
 
 

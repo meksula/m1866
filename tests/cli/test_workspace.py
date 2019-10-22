@@ -26,3 +26,14 @@ class TestWorkspace(unittest.TestCase):
         expected_dir = '/home/' + whomai[2:-3] + '/.m1866/workspaces/default'
         self.assertEqual(expected_dir, wsp_dir)
 
+    def test_workspace_is_workspace_establish_should_return_true(self):
+        workspace = Workspace("default")
+        result = workspace.is_workspace_established()
+
+        self.assertTrue(result)
+
+    def test_workspace_is_workspace_establish_should_return_false(self):
+        workspace = Workspace(None)
+        result = workspace.is_workspace_established()
+
+        self.assertFalse(result)

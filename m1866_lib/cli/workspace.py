@@ -3,6 +3,7 @@ import subprocess
 from colorama import Fore, Back, Style
 import re
 
+from m1866_lib.cli.interact import UserInteractor
 from m1866_lib.cli.unix_utils import define_workspace_path_unix
 
 
@@ -14,6 +15,16 @@ class Workspace:
             Workspace.instance = Workspace.__Workspace(default_workspace)
         else:
             Workspace.instance.current_workspace = default_workspace
+        self.valid_workspace(default_workspace)
+
+    def valid_workspace(self, default_workspace):
+        if default_workspace is None:
+            print(Fore.RED, 'Cannot read default workspace from config.yml file. Set `default` parameter', Style.RESET_ALL)
+            return
+        if default_workspace not in self.instance.list_workspaces():
+            print(Fore.RED, f'Workspace called: {default_workspace} not recognized!', Style.RESET_ALL)
+            self.instance.create_workspace_dir_prompt(default_workspace)
+        return default_workspace
 
     def workspace_establish(self, workspace):
         if workspace in self.instance.list_workspaces():
@@ -23,9 +34,22 @@ class Workspace:
             self.instance.create_workspace_dir(workspace)
             self.instance.use_workspace(workspace)
 
+    def is_workspace_established(self):
+        return self.instance.current_workspace is not None
+
     class __Workspace:
         def __init__(self, workspace):
             self.current_workspace = workspace
+
+        # Can create workspace only with user's confirmation
+        def create_workspace_dir_prompt(self, default_workspace):
+            print(f'Do create {default_workspace} workspace now? (Y/N)')
+            result = UserInteractor(input()).get_last()
+            if result is True:
+                self.create_workspace_dir(default_workspace)
+            else:
+                print(Fore.RED, 'Workspace not established.', Style.RESET_ALL)
+            return
 
         def create_workspace_dir(self, workspace_name):
             if not self.valid(workspace_name):
